@@ -12,10 +12,12 @@ $query = "SELECT * FROM user WHERE username='$username' AND password='$password'
 $hasil = mysqli_query($db,$query);
 $data_user = mysqli_fetch_assoc($hasil);
 
-// cek
-if ($data_user != null) {
-    $_SESSION['user'] = $data_user;
+if ($data_user > 0) {
+    $_SESSION['nama_user'] = $data_user['nama_user'];
+    $_SESSION['username'] = $data_user['username'];
     header('Location: admin/dashboard.php');
+} else {
+    echo "<script>alert('Username atau Password Salah'); window.location.href='login.php'</script>";
 }
 
 ?>

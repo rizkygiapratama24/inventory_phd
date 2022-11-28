@@ -1,7 +1,10 @@
 <?php
 session_start();
+if (!isset($_SESSION['username'])) {
+    header('Location:../login.php');
+    exit;
+}
 include "../../config.php";
-
 include('../../function_format/format-rupiah.php');
 ?>
 <!DOCTYPE html>
@@ -10,14 +13,15 @@ include('../../function_format/format-rupiah.php');
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Barang</title>
+        <title>Inventory PHD</title>
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="../../assets/custom2.css">
     </head>
     <body>
-    <div class="d-flex" id="wrapper">
+        <div class="d-flex" id="wrapper">
             <!-- Sidebar-->
             <?php include('../../layouts/sidebar.php'); ?>
             <!-- Page content wrapper-->
@@ -30,7 +34,7 @@ include('../../function_format/format-rupiah.php');
                     <div class="mt-5">
                         <div class="card">
                             <div class="card-header">
-                                <a href="tambah.php" class="btn btn-sm btn-primary">
+                                <a href="#!" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalTambah">
                                     Tambah
                                 </a>
                             </div>
@@ -97,8 +101,8 @@ include('../../function_format/format-rupiah.php');
                                                         <h5 class="modal-title" id="exampleModalLabel">Edit Data Barang</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
-                                                    <div class="modal-body">
-                                                        <form action="proses-edit-barang.php?id_barang=<?php echo $row['id_barang']; ?>" method="post">
+                                                    <form action="proses-edit-barang.php?id_barang=<?php echo $row['id_barang']; ?>" method="post">
+                                                        <div class="modal-body">
                                                             <div class="row">
                                                                 <?php
                                                                     $id_barang = $row['id_barang'];
@@ -116,7 +120,7 @@ include('../../function_format/format-rupiah.php');
                                                                     <div class="form-group">
                                                                         <label for="nama_barang" class="form-label">Nama Barang</label>
                                                                         <input type="text" name="nama_barang" value="<?php echo $data['nama_barang']; ?>" class="form-control" autocomplete="off" required>
-                                                                    </div>
+                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-3">
                                                                     <div class="form-group">
@@ -140,28 +144,22 @@ include('../../function_format/format-rupiah.php');
                                                                         </select>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-3">
-                                                                    <div class="form-group">
-                                                                        <label for="stok_barang" class="form-label">Stok Barang</label>
-                                                                        <input type="number" name="stok_barang" class="form-control" value="<?php echo $data['stok_barang']; ?>" autocomplete="off">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-9">
+                                                                <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label for="harga_barang" class="form-label">Harga Barang</label>
-                                                                        <input type="number" name="harga_barang" class="form-control" value="<?php echo $data['harga_barang']; ?>" autocomplete="off">
+                                                                        <input type="number" name="harga_barang" class="form-control" value="<?php echo $data['harga_barang']; ?>" autocomplete="off" required>
                                                                     </div>
                                                                 </div>
                                                                 <?php
                                                                     }
                                                                 ?>
                                                             </div>
-                                                        
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="reset" name="reset" class="btn btn-sm btn-danger">Batal</button>
-                                                        <button type="submit" name="edit" class="btn btn-sm btn-primary">Simpan</button>
-                                                    </div>
+                                                            
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="reset" name="reset" class="btn btn-sm btn-danger">Batal</button>
+                                                            <button type="submit" name="edit" class="btn btn-sm btn-primary">Simpan</button>
+                                                        </div>
                                                     </form>
                                                 </div>
                                             </div>
@@ -174,6 +172,79 @@ include('../../function_format/format-rupiah.php');
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalTambah" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tambah Barang</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="proses-tambah-barang.php" method="post">
+                    <?php
+                        $query = mysqli_query($db, "SELECT max(kode_barang) as kodeTerbesar FROM barang");
+                        $data = mysqli_fetch_array($query);
+                        $kodeBarang = $data['kodeTerbesar'];
+
+                        $urutan = (int) substr($kodeBarang, 3, 3);
+                        $urutan++;
+
+                        $huruf = "BRG";
+                        $kodeBarang = $huruf . sprintf("%03s", $urutan);
+                    ?>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="kode_barang" class="form-label">Kode Barang</label>
+                                    <input type="text" name="kode_barang" class="form-control" value="<?php echo $kodeBarang; ?>" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <label for="nama_barang" class="form-label">Nama Barang</label>
+                                    <input type="text" name="nama_barang" class="form-control" autocomplete="off" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="unit_barang" class="form-label">Unit Barang</label>
+                                    <input type="text" name="unit_barang" class="form-control" autocomplete="off" required>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <label for="id_jenis" class="form-label">Jenis Barang</label>
+                                    <select name="id_jenis" class="form-select">
+                                        <option value="">-- PILIH JENIS --</option>
+                                        <?php
+                                            $query = mysqli_query($db,"SELECT * FROM jenis_barang");
+                                            while ($row = mysqli_fetch_array($query)) {
+                                        ?>
+                                        <option value="<?php echo $row['id_jenis']; ?>"><?php echo $row['nama_jenis']; ?></option>
+                                        <?php
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="harga_barang" class="form-label">Harga Barang</label>
+                                    <input type="number" name="harga_barang" class="form-control" autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" name="reset" class="btn btn-sm btn-danger">Batal</button>
+                        <button type="submit" name="simpan" class="btn btn-sm btn-primary">Simpan</button>
+                    </div>
+                </form>
                 </div>
             </div>
         </div>

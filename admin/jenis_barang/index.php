@@ -1,13 +1,22 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header('Location:../login.php');
+    exit;
+}
+include "../../config.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Jenis Barang</title>
+        <title>Inventory PHD</title>
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="../../assets/custom2.css">
     </head>
     <body>
@@ -24,7 +33,7 @@
                     <div class="mt-5">
                         <div class="card">
                             <div class="card-header">
-                                <a href="tambah.php" class="btn btn-sm btn-primary">
+                                <a href="#!" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalTambah">
                                     Tambah
                                 </a>
                             </div>
@@ -39,7 +48,6 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                            include "../../config.php";
                                             $query = mysqli_query($db,"Select * from jenis_barang");
                                             $no = 0;
                                             while ($data = mysqli_fetch_array($query)) {
@@ -92,7 +100,7 @@
                                                         <div class="form-group">
                                                             <input type="hidden" name="id_jenis" value="<?php echo $row['id_jenis']; ?>">
                                                             <label for="nama_jenis" class="form-label">Jenis Barang</label>
-                                                            <input type="text" name="nama_jenis" class="form-control" value="<?php echo $row['nama_jenis']; ?>" autocomplete="off">
+                                                            <input type="text" name="nama_jenis" class="form-control" value="<?php echo $row['nama_jenis']; ?>" autocomplete="off" required>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -112,11 +120,32 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="card-footer">
-
-                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalTambah" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Jenis Barang</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="proses-tambah-jenis.php" method="post">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="jenis_barang" class="form-label">Jenis Barang</label>
+                                <input type="text" name="nama_jenis" class="form-control" placeholder="Jenis Barang" autocomplete="off" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" name="reset" class="btn btn-sm btn-danger">Batal</button>
+                            <button type="submit" name="simpan" class="btn btn-sm btn-primary">Simpan</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

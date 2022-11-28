@@ -7,8 +7,8 @@
     <div class="list-group list-group-flush">
         <a class="list-group-item list-group-item-action list-group-item-light p-3" href="<?php echo $hest; ?>/dashboard.php">Dashboard</a>
         <a class="list-group-item list-group-item-action list-group-item-light p-3" href="<?php echo $hest; ?>/barang/">Data Barang</a>
-        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Barang Masuk</a>
-        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Barang Keluar</a>
+        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="<?php echo $hest ?>/barang_masuk/">Barang Masuk</a>
+        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="<?php echo $hest; ?>/barang_keluar/">Barang Keluar</a>
         <a class="list-group-item list-group-item-action list-group-item-light p-3" href="<?php echo $hest; ?>/jenis_barang/">Jenis Barang</a>       
     </div>
 </div>
